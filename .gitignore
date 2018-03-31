@@ -1,13 +1,11 @@
 # Python
 __pycache__
 
-# CMake
-CMakeFiles
+# Generate folder
+_generated
 
 # Build folder
 build
-build_third_party
-install_third_party
 
 # Prerequisites
 *.d
