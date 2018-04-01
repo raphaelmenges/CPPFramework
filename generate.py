@@ -45,33 +45,27 @@ def create_folder(dir):
 		os.makedirs(dir)
 
 # Create folder structure for framework
+config_subdir = ""
+if config == Configuration.Debug: # debug configuration
+	config_subdir = DEBUG_SUBDIR
+else: # release configuration
+	config_subdir = RELEASE_SUBDIR
 create_folder(GENERATED_DIR)
 create_folder(BUILD_DIR)
 
-if config == Configuration.Debug: # debug configuration
+# Generated
+create_folder(GENERATED_DIR + config_subdir)
+create_folder(GENERATED_DIR + config_subdir + GENERATED_OPEN_CV_SUBDIR)
+create_folder(GENERATED_DIR + config_subdir + GENERATED_OPEN_CV_SUBDIR + GENERATED_BUILD_SUBDIR)
+create_folder(GENERATED_DIR + config_subdir + GENERATED_OPEN_CV_SUBDIR + GENERATED_INSTALL_SUBDIR)
 
-	# Generated
-	create_folder(GENERATED_DIR + DEBUG_SUBDIR)
-	create_folder(GENERATED_DIR + DEBUG_SUBDIR + GENERATED_OPEN_CV_SUBDIR)
-	create_folder(GENERATED_DIR + DEBUG_SUBDIR + GENERATED_OPEN_CV_SUBDIR + GENERATED_BUILD_SUBDIR)
-	create_folder(GENERATED_DIR + DEBUG_SUBDIR + GENERATED_OPEN_CV_SUBDIR + GENERATED_INSTALL_SUBDIR)
-	
-else: # release configuration
-
-	# Generated
-	create_folder(GENERATED_DIR + RELEASE_SUBDIR)
-	create_folder(GENERATED_DIR + RELEASE_SUBDIR + GENERATED_OPEN_CV_SUBDIR)
-	create_folder(GENERATED_DIR + RELEASE_SUBDIR + GENERATED_OPEN_CV_SUBDIR + GENERATED_BUILD_SUBDIR)
-	create_folder(GENERATED_DIR + RELEASE_SUBDIR + GENERATED_OPEN_CV_SUBDIR + GENERATED_INSTALL_SUBDIR)
+# Own project
+create_folder(BUILD_DIR + config_subdir)
 
 # Generate absolute paths before going into folders to execute cmake
-config_subdir = ""
-if config == Configuration.Debug:  # debug configuration
-	config_subdir = DEBUG_SUBDIR
-else:  # release configuration
-	config_subdir = RELEASE_SUBDIR
 open_cv_build_dir = os.path.abspath(GENERATED_DIR + config_subdir + GENERATED_OPEN_CV_SUBDIR + GENERATED_BUILD_SUBDIR)
 open_cv_install_dir = os.path.abspath(GENERATED_DIR + config_subdir + GENERATED_OPEN_CV_SUBDIR + GENERATED_INSTALL_SUBDIR)
+project_build_dir = os.path.abspath(BUILD_DIR + config_subdir)
 
 # Generate OpenCV project
 os.chdir(open_cv_build_dir) # change into build folder of OpenCV
@@ -198,4 +192,9 @@ cmakeCmd = [
 retCode = subprocess.check_call(cmakeCmd, stderr=subprocess.STDOUT, shell=False)
 
 # Build own project
-# TODO
+os.chdir(project_build_dir) # change into build folder of project
+cmakeCmd = [
+	"cmake.exe", # cmake
+	"-G", "Visual Studio 14 Win64", # compiler
+	"../../MyProject"] # source code folder
+retCode = subprocess.check_call(cmakeCmd, stderr=subprocess.STDOUT, shell=False)
