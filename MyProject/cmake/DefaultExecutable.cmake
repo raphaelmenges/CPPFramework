@@ -17,7 +17,7 @@ set(CODE ${LOCAL_CODE} ${GLOBAL_CODE})
 add_executable(${TARGET_NAME} ${CODE})
 
 # Link to executable
-target_link_libraries(${TARGET_NAME})
+target_link_libraries(${TARGET_NAME} ${OPENCV_STATIC_LIBS})
 
 # Filtering for Visual Studio
 if(MSVC)

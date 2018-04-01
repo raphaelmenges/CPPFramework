@@ -26,6 +26,25 @@ file(GLOB_RECURSE UTIL ${UTIL_PATH}/*.h ${UTIL_PATH}/*.cpp)
 # Global code
 set(GLOBAL_CODE ${UTIL})
 
+# OpenCV
+include_directories("${CMAKE_SOURCE_DIR}/../_generated/debug/opencv/install/include")
+set(OPENCV_STATIC_LIBS
+	"${CMAKE_SOURCE_DIR}/../_generated/debug/opencv/install/x64/vc14/staticlib/opencv_core341d.lib"
+	"${CMAKE_SOURCE_DIR}/../_generated/debug/opencv/install/x64/vc14/staticlib/opencv_videoio341d.lib"
+	"${CMAKE_SOURCE_DIR}/../_generated/debug/opencv/install/x64/vc14/staticlib/zlibd.lib"
+	"${CMAKE_SOURCE_DIR}/../_generated/debug/opencv/install/x64/vc14/staticlib/ippicvmt.lib"
+	"${CMAKE_SOURCE_DIR}/../_generated/debug/opencv/install/x64/vc14/staticlib/ippiwd.lib"
+	"${CMAKE_SOURCE_DIR}/../_generated/debug/opencv/install/x64/vc14/staticlib/ittnotifyd.lib"
+	"${CMAKE_SOURCE_DIR}/../_generated/debug/opencv/install/x64/vc14/staticlib/libjasperd.lib"
+	"${CMAKE_SOURCE_DIR}/../_generated/debug/opencv/install/x64/vc14/staticlib/libpngd.lib"
+	"${CMAKE_SOURCE_DIR}/../_generated/debug/opencv/install/x64/vc14/staticlib/opencv_core341d.lib"
+	"${CMAKE_SOURCE_DIR}/../_generated/debug/opencv/install/x64/vc14/staticlib/opencv_features2d341d.lib"
+	"${CMAKE_SOURCE_DIR}/../_generated/debug/opencv/install/x64/vc14/staticlib/opencv_imgcodecs341d.lib"
+	"${CMAKE_SOURCE_DIR}/../_generated/debug/opencv/install/x64/vc14/staticlib/opencv_imgproc341d.lib"
+	"${CMAKE_SOURCE_DIR}/../_generated/debug/opencv/install/x64/vc14/staticlib/opencv_ml341d.lib"
+	"${CMAKE_SOURCE_DIR}/../_generated/debug/opencv/install/x64/vc14/staticlib/opencv_photo341d.lib"
+	"${CMAKE_SOURCE_DIR}/../_generated/debug/opencv/install/x64/vc14/staticlib/opencv_video341d.lib")
+
 # Projects
 SUBDIRLIST(SUBDIRS ${CMAKE_SOURCE_DIR}/src/exe)
 foreach(SUBDIR ${SUBDIRS})
