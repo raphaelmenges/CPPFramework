@@ -1,9 +1,9 @@
 import os
 import sys
 import subprocess
+import argparse
 
 # 64bit, only
-# TODO: decide debug / release as argument
 # TODO: decide generator (vs 2015/2017 on windows, gcc? on linux) as argument
 
 # Defines
@@ -23,9 +23,21 @@ class Configuration:
 			return "Debug"
 		else:
 			return "Release"
+			
+# Parse command line arguments
+parser = argparse.ArgumentParser()
+parser.add_argument("-c", "--configuration", help="build configuration, either 'release' or 'debug'")
+args = parser.parse_args()
 
-# Parse configuration from arguments
-config = Configuration.Release # TODO: parse from arguments
+# Apply command line arguments
+config = Configuration.Release
+if args.configuration:
+	if(args.configuration == "debug"):
+		config = Configuration.Debug
+	elif(args.configuration == "release"):
+		config = Configuration.Release
+	else:
+		print("Provided configuration unkown. Applying fallback to 'release'.")
 
 # Function to create folder if not yet existing
 def create_folder(dir):
