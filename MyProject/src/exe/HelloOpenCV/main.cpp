@@ -1,12 +1,20 @@
 #include <opencv2/core/utility.hpp>
+#include <opencv2/opencv.hpp>
 #include <iostream>
 
 int main(int argc, const char* argv[])
 {
 	std::cout << "Welcome to OpenCV " << CV_VERSION << std::endl;
 
-	char input;
-	std::cin >> input;
+	cv::Mat img, gray;
+	img = cv::imread(std::string(RES_PATH) + "/test/nero.png", cv::IMREAD_COLOR);
 
+	cv::cvtColor(img, gray, cv::COLOR_BGR2GRAY);
+	cv::GaussianBlur(gray, gray, cv::Size(7, 7), 1.5);
+	cv::Canny(gray, gray, 0, 50);
+
+	cv::imshow("img", img);
+	cv::imshow("edges", gray);
+	cv::waitKey();
 	return 0;
 }

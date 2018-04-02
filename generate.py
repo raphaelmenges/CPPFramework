@@ -83,8 +83,8 @@ cmakeCmd = [
 	"-D", "BUILD_TESTS=OFF", # no tests
 	"-D", "BUILD_PERF_TESTS=OFF",
 	"-D", "BUILD_PACKAGE=OFF",
-	"-D", "BUILD_SHARED_LIBS=OFF",
-	"-D", "BUILD_WITH_STATIC_CRT=OFF",
+	"-D", "BUILD_SHARED_LIBS=ON", # build shared libs
+	"-D", "BUILD_WITH_STATIC_CRT=OFF", # only for MSVC
 	"-D", "BUILD_USE_SYMLINKS=OFF",
 	"-D", "BUILD_WITH_DEBUG_INFO=OFF",
 	"-D", "BUILD_WITH_DYNAMIC_IPP=OFF",
@@ -104,7 +104,7 @@ cmakeCmd = [
 	"-D", "WITH_EIGEN=ON",
 	"-D", "WITH_FFMPEG=ON",
 	"-D", "WITH_GSTREAMER=OFF",
-	"-D", "WITH_JPEG=OFF",
+	"-D", "WITH_JPEG=ON",
 	"-D", "WITH_MATLAB=OFF",
 	"-D", "WITH_LAPACK=OFF",
 	"-D", "WITH_OPENCL=OFF",
@@ -126,7 +126,7 @@ cmakeCmd = [
 	"-D", "WITH_VFW=OFF",
 	"-D", "WITH_VTK=OFF",
 	"-D", "WITH_WEBP=OFF",
-	"-D", "WITH_WIN32UI=OFF",
+	"-D", "WITH_WIN32UI=ON", # TODO: deactivate this under linux or just let it be ignored? under linux, gtk3 would be required...
 	"-D", "WITH_XIMEA=OFF",
 	"-D", "mdi=OFF",
 	"-D", "next=OFF",
@@ -137,7 +137,7 @@ cmakeCmd = [
 	"-D", "thunder=OFF",
 
 	# Libraries
-	"-D", "BUILD_JPEG=OFF",
+	"-D", "BUILD_JPEG=ON",
 	"-D", "BUILD_OPENEXR=OFF",
 	"-D", "BUILD_PNG=ON",
 	"-D", "BUILD_PROTOBUF=OFF",
@@ -156,7 +156,7 @@ cmakeCmd = [
 	"-D", "BUILD_opencv_dnn=OFF",
 	"-D", "BUILD_opencv_features2d=ON",
 	"-D", "BUILD_opencv_flann=OFF",
-	"-D", "BUILD_opencv_highgui=OFF",
+	"-D", "BUILD_opencv_highgui=ON", # required for imshow (so rather 'debugging')
 	"-D", "BUILD_opencv_imgcodecs=ON",
 	"-D", "BUILD_opencv_imgproc=ON",
 	"-D", "BUILD_opencv_ml=ON",
@@ -181,7 +181,7 @@ cmakeCmd = [
 	
 	# ##########################
 	
-	"../../../../ThirdParty/opencv"] # source code folder
+	"../../../../third_party/opencv"] # source code folder
 retCode = subprocess.check_call(cmakeCmd, stderr=subprocess.STDOUT, shell=False)
 
 # Build and install OpenCV project
