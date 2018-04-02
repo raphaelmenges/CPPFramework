@@ -197,5 +197,6 @@ os.chdir(project_build_dir) # change into build folder of project
 cmakeCmd = [
 	"cmake.exe", # cmake
 	"-G", "Visual Studio 14 Win64", # compiler
+	"-D", "CONFIG=" + Configuration.to_string(config),
 	"../../MyProject"] # source code folder
 retCode = subprocess.check_call(cmakeCmd, stderr=subprocess.STDOUT, shell=False)

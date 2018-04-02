@@ -1,7 +1,17 @@
-# Setup
 cmake_minimum_required(VERSION 2.8)
-set(CMAKE_CONFIGURATION_TYPES Debug Release)
 project(CPPFramework)
+
+# Configuration
+set(CONFIG "Debug" CACHE STRING "Build configuration (Debug / Release).")
+set_property(CACHE CONFIG PROPERTY STRINGS Debug Release)
+string(COMPARE EQUAL "${CONFIG}" "Debug" cmp)
+if(cmp)
+	set(CMAKE_CONFIGURATION_TYPES "Debug" CACHE INTERNAL "" FORCE)
+else()
+	set(CMAKE_CONFIGURATION_TYPES "Release" CACHE INTERNAL "" FORCE)
+endif()
+message(STATUS "Build Configuration='${CMAKE_CONFIGURATION_TYPES}'")
+string(TOLOWER "${CMAKE_CONFIGURATION_TYPES}" CONFIG_LOWER_CASE)
 
 # Set root directory of framework
 set(FRAMEWORK_DIR "${CMAKE_SOURCE_DIR}/..")
@@ -34,11 +44,11 @@ file(GLOB_RECURSE UTIL ${UTIL_PATH}/*.h ${UTIL_PATH}/*.cpp)
 set(GLOBAL_CODE ${UTIL})
 
 # OpenCV
-include_directories("${FRAMEWORK_DIR}/_generated/debug/opencv/install/include") # include dir
-file(GLOB OPENCV_LIBS "${FRAMEWORK_DIR}/_generated/debug/opencv/install/x64/vc14/lib/*.lib") # linked libraries
+include_directories("${FRAMEWORK_DIR}/_generated/${CONFIG_LOWER_CASE}/opencv/install/include") # include dir
+file(GLOB OPENCV_LIBS "${FRAMEWORK_DIR}/_generated/${CONFIG_LOWER_CASE}/opencv/install/x64/vc14/lib/*.lib") # linked libraries
 
 # Copy shared libraries to output folder of executable binaries
-file(GLOB OPENCV_SHARED_LIBS "${FRAMEWORK_DIR}/_generated/debug/opencv/install/x64/vc14/bin/*.dll")
+file(GLOB OPENCV_SHARED_LIBS "${FRAMEWORK_DIR}/_generated/${CONFIG_LOWER_CASE}/opencv/install/x64/vc14/bin/*.dll")
 foreach(LIB ${OPENCV_SHARED_LIBS})
 
 	# Get filename of shared lib
@@ -46,7 +56,7 @@ foreach(LIB ${OPENCV_SHARED_LIBS})
 	
 	# Workaround for MCVC, where binaries are stored in subfolder named after configuration
 	if(MSVC)
-		set(LIB_FILENAME debug/${LIB_FILENAME})
+		set(LIB_FILENAME ${CONFIG_LOWER_CASE}/${LIB_FILENAME})
 	endif(MSVC)
 	
 	# Copy shared library to same folder as executable binaries
