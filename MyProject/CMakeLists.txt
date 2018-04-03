@@ -35,11 +35,6 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib CACHE PATH "Output path for li
 # Macros
 include(${CMAKE_MODULE_PATH}/macros.cmake)
 
-# Utilities
-set(UTIL_PATH ${CMAKE_SOURCE_DIR}/src/util)
-file(GLOB_RECURSE UTIL ${UTIL_PATH}/*.h ${UTIL_PATH}/*.cpp)
-# TODO: include util path?
-
 # Global code
 set(GLOBAL_CODE ${UTIL})
 
