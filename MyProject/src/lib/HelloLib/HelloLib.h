@@ -1,1 +1,4 @@
-int get_the_answer();
+namespace HelloLib
+{
+	int get_the_answer();
+}

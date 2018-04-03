@@ -9,7 +9,7 @@ Script to generate framework. Please execute this instead of manual CMake calls.
 Remarks:
 - 64bit, only
 - TODO: switch to enable visual_debug (aka whether to build highlevel GUI module or not)
-- TODO: no MacOS support
+- TODO: MacOS support
 """
 
 # #########################
@@ -33,7 +33,7 @@ class Generator:
 	def to_string(generator):
 		if(generator == Generator.MSVC2015):
 			return "Visual Studio 14 Win64"
-		elif(generator == Generator.MSVC2015):
+		elif(generator == Generator.MSVC2017):
 			return "Visual Studio 15 Win64"
 		else:
 			return "Unix Makefiles"
@@ -54,7 +54,7 @@ class Configuration:
 # Parse command line arguments
 parser = argparse.ArgumentParser()
 parser.add_argument("-c", "--configuration", help="build configuration, either 'release' or 'debug'")
-parser.add_argument("-g", "--generator", help="generator, either 'MSVC2015' or 'MSVC2017' on Windows or 'Unix Makefiles' on Linux")
+parser.add_argument("-g", "--generator", help="generator, either 'MSVC2015' or 'MSVC2017' on Windows or 'Make' on Linux")
 args = parser.parse_args()
 
 # #########################################
@@ -64,8 +64,7 @@ args = parser.parse_args()
 # Retrieve platform
 cmake_exe = "cmake"
 generator = Generator.Make
-from sys import platform
-if platform == "linux" or platform == "linux2": # Linux
+if sys.platform == "linux" or sys.platform == "linux2": # Linux
 	
 	# CMake exe path
 	cmake_exe = "cmake"
@@ -73,7 +72,7 @@ if platform == "linux" or platform == "linux2": # Linux
     # Generator
 	generator = Generator.Make # ignore command line argument, as there is only one generator supported
 	
-elif platform == "win32": # Windows
+elif sys.platform == "win32": # Windows
 
 	# CMake exe path
 	cmake_exe = "C:/Program Files/CMake/bin/cmake.exe" # TODO: might fail for 32bit CMake on 64bit systems
@@ -141,7 +140,7 @@ create_dir(BUILD_DIR + config_subdir)
 # Generate absolute paths before going into directories to execute cmake
 open_cv_build_dir = os.path.abspath(GENERATED_DIR + config_subdir + GENERATED_OPEN_CV_SUBDIR + GENERATED_BUILD_SUBDIR)
 open_cv_install_dir = os.path.abspath(GENERATED_DIR + config_subdir + GENERATED_OPEN_CV_SUBDIR + GENERATED_INSTALL_SUBDIR)
-project_build_dir = os.path.abspath(BUILD_DIR + config_subdir)
+build_dir = os.path.abspath(BUILD_DIR + config_subdir)
 
 # ########################
 # ######## OpenCV ########
@@ -149,7 +148,7 @@ project_build_dir = os.path.abspath(BUILD_DIR + config_subdir)
 
 # Generate OpenCV project
 os.chdir(open_cv_build_dir) # change into build directory of OpenCV
-cmakeCmd = [
+cmake_cmd = [
 	cmake_exe, # cmake
 	"-G", Generator.to_string(generator), # compiler
 	"-Wno-dev", # supress CMake developer warnings
@@ -254,7 +253,7 @@ cmakeCmd = [
 	# Bindings
 	"-D", "BUILD_JAVA=OFF", # no java support
 	"-D", "BUILD_opencv_java_bindings_generator=OFF",
-	"-D", "BUILD_opencv_python_bindings_generator=OFF", # no python bindings
+	"-D", "BUILD_opencv_python_bindings_generator=OFF",
 	"-D", "BUILD_opencv_python3=OFF",
 	"-D", "BUILD_opencv_js=OFF",
 	"-D", "BUILD_opencv_js=OFF",
@@ -262,25 +261,25 @@ cmakeCmd = [
 	# ##########################
 	
 	"../../../../third_party/opencv"] # source code directory
-retCode = subprocess.check_call(cmakeCmd, stderr=subprocess.STDOUT, shell=False)
+retCode = subprocess.check_call(cmake_cmd, stderr=subprocess.STDOUT, shell=False)
 
 # Build and install OpenCV project
-cmakeCmd = [
+cmake_cmd = [
 	cmake_exe, # cmake
 	"--build", ".",
 	"--config", Configuration.to_string(config),
 	"--target", "install"]
-retCode = subprocess.check_call(cmakeCmd, stderr=subprocess.STDOUT, shell=False)
+retCode = subprocess.check_call(cmake_cmd, stderr=subprocess.STDOUT, shell=False)
 
 # #########################
 # ######## Project ########
 # #########################
 
 # Build own project
-os.chdir(project_build_dir) # change into build directory of project
-cmakeCmd = [
+os.chdir(build_dir) # change into build directory of project
+cmake_cmd = [
 	cmake_exe, # cmake
 	"-G", Generator.to_string(generator), # compiler
 	"-D", "CONFIG=" + Configuration.to_string(config),
 	"../../MyProject"] # source code directory
-retCode = subprocess.check_call(cmakeCmd, stderr=subprocess.STDOUT, shell=False)
+retCode = subprocess.check_call(cmake_cmd, stderr=subprocess.STDOUT, shell=False)

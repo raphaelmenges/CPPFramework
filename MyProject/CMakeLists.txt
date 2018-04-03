@@ -74,17 +74,17 @@ endforeach()
 
 # Libraries
 set(INTERNAL_LIBRARIES "") # collect libraries to link later into executable
-message(STATUS "- Libraries")
+message(STATUS "Collecting Libraries")
 SUBDIRLIST(SUBDIRS ${LIB_PATH})
 foreach(SUBDIR ${SUBDIRS})
-    message(STATUS ${SUBDIR})
+    message(STATUS "- ${SUBDIR}")
     add_subdirectory(${LIB_PATH}/${SUBDIR})
 endforeach()
 
 # Executables
-message(STATUS "- Executables")
+message(STATUS "Collecting Executables")
 SUBDIRLIST(SUBDIRS ${EXE_PATH})
 foreach(SUBDIR ${SUBDIRS})
-    message(STATUS ${SUBDIR})
+    message(STATUS "- ${SUBDIR}")
     add_subdirectory(${EXE_PATH}/${SUBDIR})
 endforeach()

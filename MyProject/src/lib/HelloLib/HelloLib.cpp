@@ -1,6 +1,6 @@
 #include "HelloLib.h"
 
-int get_the_answer()
+int HelloLib::get_the_answer()
 {
 	return 42;
 }
