@@ -4,6 +4,9 @@ cmake_minimum_required(VERSION 2.8)
 get_filename_component(TARGET_NAME ${CMAKE_CURRENT_SOURCE_DIR} NAME)
 string(REPLACE " " "_" TARGET_NAME ${TARGET_NAME})
 
+# Remember library in parent scope list
+set(INTERNAL_LIBRARIES ${INTERNAL_LIBRARIES} ${TARGET_NAME} PARENT_SCOPE)
+
 # Code
 file(GLOB_RECURSE SOURCES *.cpp)
 file(GLOB_RECURSE HEADER *.h)
@@ -13,14 +16,14 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 # Combine local code with global code
 set(CODE ${LOCAL_CODE} ${GLOBAL_CODE})
 
-# Create executable
-add_executable(${TARGET_NAME} ${CODE})
+# Create library
+add_library(${TARGET_NAME} STATIC ${CODE} )
 
 # Set label of project
-set_property(TARGET ${TARGET_NAME} PROPERTY PROJECT_LABEL exe_${TARGET_NAME})
+set_property(TARGET ${TARGET_NAME} PROPERTY PROJECT_LABEL lib_${TARGET_NAME})
 
-# Link to executable
-target_link_libraries(${TARGET_NAME} ${INTERNAL_LIBRARIES} ${EXTERNAL_LIBRARIES})
+# Link to library (link only to external libraries and not among each other)
+target_link_libraries(${TARGET_NAME} ${EXTERNAL_LIBRARIES})
 
 # Filtering for Visual Studio
 if(MSVC)
