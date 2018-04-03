@@ -1,5 +1,8 @@
 cmake_minimum_required(VERSION 2.8)
 
+# TODO
+# - for deploying, res_path must be relative to executables
+
 # Configuration
 set(CONFIG "Debug" CACHE STRING "Build configuration (Debug / Release).")
 set_property(CACHE CONFIG PROPERTY STRINGS Debug Release)
@@ -13,7 +16,7 @@ message(STATUS "Build Configuration='${CMAKE_CONFIGURATION_TYPES}'")
 string(TOLOWER "${CMAKE_CONFIGURATION_TYPES}" CONFIG_LOWER_CASE)
 
 # Set project name
-project("CPPFramework_${CONFIG_LOWER_CASE})
+project(CPPFramework_${CONFIG_LOWER_CASE})
 
 # Set root directory of framework
 set(FRAMEWORK_DIR "${CMAKE_SOURCE_DIR}/..")
@@ -38,7 +41,7 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib CACHE PATH "Output path for li
 include(${CMAKE_MODULE_PATH}/macros.cmake)
 
 # Global code (empty, as of now)
-set(GLOBAL_CODE)
+# set(GLOBAL_CODE)
 
 # OpenCV
 include_directories("${FRAMEWORK_DIR}/_generated/${CONFIG_LOWER_CASE}/opencv/install/include") # include dir

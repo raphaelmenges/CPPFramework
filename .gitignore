@@ -5,7 +5,7 @@ __pycache__
 _generated
 
 # Build folder
-build
+_build
 
 # Prerequisites
 *.d
