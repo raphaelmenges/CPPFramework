@@ -9,7 +9,6 @@ Script to generate framework. Please execute this instead of manual CMake calls.
 Remarks:
 - 64bit, only
 - TODO: switch to enable visual_debug (aka whether to build highlevel GUI module or not)
-- TODO: MacOS support
 """
 
 # #########################
