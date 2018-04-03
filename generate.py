@@ -180,7 +180,7 @@ cmake_cmd = [
 	"-D", "WITH_CUDA=OFF",
 	"-D", "WITH_DIRECTX=OFF",
 	"-D", "WITH_DSHOW=ON",
-	"-D", "WITH_EIGEN=ON",
+	"-D", "WITH_EIGEN=ON", # conversion functionality between OpenCV and EIGEN
 	"-D", "WITH_FFMPEG=ON",
 	"-D", "WITH_GSTREAMER=OFF",
 	"-D", "WITH_JPEG=ON",
@@ -227,6 +227,7 @@ cmake_cmd = [
 	
 	# Other
 	"-D", "BUILD_CUDA_STUBS=OFF", # no CUDA stubs
+	# "-D", "EIGEN_INCLUDE_PATH=" + "", # not required to set for EIGEN and OpenCV compatibility....
 	
 	# Modules
 	"-D", "BUILD_opencv_apps=OFF",

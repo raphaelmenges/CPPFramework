@@ -3,6 +3,9 @@ cmake_minimum_required(VERSION 2.8)
 # TODO
 # - For deploying, res_path must be relative to executables
 
+# Preprocessor commands
+add_definitions(-DEIGEN_MPL2_ONLY) # include no LGPL code from EIGEN
+
 # Configuration
 set(CONFIG "Debug" CACHE STRING "Build configuration (Debug / Release).")
 set_property(CACHE CONFIG PROPERTY STRINGS Debug Release) # valus config can be assigned
@@ -28,6 +31,7 @@ endif(NOT MSVC)
 
 # Paths
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake CACHE INTERNAL "Path to CMake modules.")
+set(EXT_PATH ${CMAKE_SOURCE_DIR}/ext)
 set(RES_PATH ${CMAKE_SOURCE_DIR}/res CACHE PATH "Path to resources.")
 set(EXE_PATH ${CMAKE_SOURCE_DIR}/src/exe)
 set(LIB_PATH ${CMAKE_SOURCE_DIR}/src/lib)
@@ -52,12 +56,13 @@ include_directories(${LIB_PATH})
 set(EXTERNAL_LIBRARIES "")
 
 # OpenCV TODO: adapt for Linux / make
-include_directories("${FRAMEWORK_DIR}/_generated/${CONFIG_LOWER_CASE}/opencv/install/include") # include dir
-file(GLOB OPENCV_LIBS "${FRAMEWORK_DIR}/_generated/${CONFIG_LOWER_CASE}/opencv/install/x64/vc14/lib/*.lib") # linked libraries
+set(OPEN_CV_PATH ${FRAMEWORK_DIR}/_generated/${CONFIG_LOWER_CASE}/opencv/install)
+include_directories(${OPEN_CV_PATH}/include) # include dir
+file(GLOB OPENCV_LIBS ${OPEN_CV_PATH}/x64/vc14/lib/*.lib) # linked libraries
 set(EXTERNAL_LIBRARIES ${EXTERNAL_LIBRARIES} ${OPENCV_LIBS})
 
 # Copy shared libraries to output folder of executable binaries
-file(GLOB OPENCV_SHARED_LIBS "${FRAMEWORK_DIR}/_generated/${CONFIG_LOWER_CASE}/opencv/install/x64/vc14/bin/*.dll")
+file(GLOB OPENCV_SHARED_LIBS ${OPEN_CV_PATH}/x64/vc14/bin/*.dll)
 foreach(LIB ${OPENCV_SHARED_LIBS})
 
 	# Get filename of shared lib
@@ -71,6 +76,10 @@ foreach(LIB ${OPENCV_SHARED_LIBS})
 	# Copy shared library to same folder as executable binaries
 	configure_file(${LIB} ${EXECUTABLE_OUTPUT_PATH}/${LIB_FILENAME} COPYONLY)
 endforeach()
+
+# EIGEN
+set(EIGEN_PATH ${EXT_PATH}/eigen-git-mirror)
+include_directories(${EIGEN_PATH})
 
 # Libraries
 set(INTERNAL_LIBRARIES "") # collect libraries to link later into executable
