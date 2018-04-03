@@ -3,17 +3,34 @@ import sys
 import subprocess
 import argparse
 
-# 64bit, only
-# TODO: decide generator (vs 2015/2017 on windows, gcc? on linux) as argument
+"""
+Script to generate framework. Please execute this instead of manual CMake calls.
+
+Remarks:
+- 64bit, only
+- TODO: switch to enable visual_debug (aka whether to build highlevel GUI module or not)
+- TODO: no macos support
+"""
 
 # Defines
 DEBUG_SUBDIR = "/debug"
 RELEASE_SUBDIR = "/release"
 GENERATED_DIR = "./_generated"
 GENERATED_OPEN_CV_SUBDIR = "/opencv"
-GENERATED_BUILD_SUBDIR = "/build"
+GENERATED_BUILD_SUBDIR = "/_build"
 GENERATED_INSTALL_SUBDIR = "/install"
 BUILD_DIR = "./build"
+
+# Available generators
+class Generator:
+	MSVC2015, MSVC2017, Make = range(3)
+	def to_string(config):
+		if(config == Configuration.MSVC2015):
+			return "Visual Studio 14 Win64"
+		elif(config == Configuration.MSVC2015):
+			return "Visual Studio 15 Win64"
+		else:
+			return "Unix Makefiles"
 
 # Available configurations
 class Configuration:
@@ -27,9 +44,30 @@ class Configuration:
 # Parse command line arguments
 parser = argparse.ArgumentParser()
 parser.add_argument("-c", "--configuration", help="build configuration, either 'release' or 'debug'")
+parser.add_argument("-g", "--generator", help="generator, either 'MSVC2015' or 'MSVC2017' on Windows or 'Unix Makefiles' on Linux")
 args = parser.parse_args()
 
-# Apply command line arguments
+# Retrieve platform
+generator = Generator.Make
+from sys import platform
+if platform == "linux" or platform == "linux2":
+    # Linux
+	generator = Generator.Make # ignore command line argument, as there is only one generator supported
+elif platform == "win32":
+    # Windows
+	if args.generator:
+		if(args.generator == "MSVC2015"):
+			generator = Generator.MSVC2015
+		elif(args.generator == "MSVC2017"):
+			generator = Generator.MSVC2017
+		else:
+			generator = Generator.MSVC2015
+			print("Provided generator unknown. Applying fallback to 'MSVC2015'.")
+	else:
+		generator = Generator.MSVC2015
+		print("No generator provided. Applying fallback to 'MSVC2015'.")
+
+# Retrieve configuration
 config = Configuration.Release
 if args.configuration:
 	if(args.configuration == "debug"):
@@ -37,43 +75,46 @@ if args.configuration:
 	elif(args.configuration == "release"):
 		config = Configuration.Release
 	else:
-		print("Provided configuration unkown. Applying fallback to 'release'.")
+		config = Configuration.Release
+		print("Provided configuration unknown. Applying fallback to 'release'.")
 
-# Function to create folder if not yet existing
-def create_folder(dir):
+# Function to create directory if not yet existing
+def create_dir(dir):
 	if not os.path.exists(dir):
-		os.makedirs(dir)
+		os.makedir(dir)
 
-# Create folder structure for framework
+# Create directory structure for framework
 config_subdir = ""
 if config == Configuration.Debug: # debug configuration
 	config_subdir = DEBUG_SUBDIR
 else: # release configuration
 	config_subdir = RELEASE_SUBDIR
-create_folder(GENERATED_DIR)
-create_folder(BUILD_DIR)
+	
+# Top-level folders
+create_dir(GENERATED_DIR)
+create_dir(BUILD_DIR)
 
 # Generated
-create_folder(GENERATED_DIR + config_subdir)
-create_folder(GENERATED_DIR + config_subdir + GENERATED_OPEN_CV_SUBDIR)
-create_folder(GENERATED_DIR + config_subdir + GENERATED_OPEN_CV_SUBDIR + GENERATED_BUILD_SUBDIR)
-create_folder(GENERATED_DIR + config_subdir + GENERATED_OPEN_CV_SUBDIR + GENERATED_INSTALL_SUBDIR)
+create_dir(GENERATED_DIR + config_subdir)
+create_dir(GENERATED_DIR + config_subdir + GENERATED_OPEN_CV_SUBDIR)
+create_dir(GENERATED_DIR + config_subdir + GENERATED_OPEN_CV_SUBDIR + GENERATED_BUILD_SUBDIR)
+create_dir(GENERATED_DIR + config_subdir + GENERATED_OPEN_CV_SUBDIR + GENERATED_INSTALL_SUBDIR)
 
 # Own project
 create_folder(BUILD_DIR + config_subdir)
 
-# Generate absolute paths before going into folders to execute cmake
+# Generate absolute paths before going into directories to execute cmake
 open_cv_build_dir = os.path.abspath(GENERATED_DIR + config_subdir + GENERATED_OPEN_CV_SUBDIR + GENERATED_BUILD_SUBDIR)
 open_cv_install_dir = os.path.abspath(GENERATED_DIR + config_subdir + GENERATED_OPEN_CV_SUBDIR + GENERATED_INSTALL_SUBDIR)
 project_build_dir = os.path.abspath(BUILD_DIR + config_subdir)
 
 # Generate OpenCV project
-os.chdir(open_cv_build_dir) # change into build folder of OpenCV
+os.chdir(open_cv_build_dir) # change into build directory of OpenCV
 cmakeCmd = [
 	"cmake.exe", # cmake
-	"-G", "Visual Studio 14 Win64", # compiler
+	"-G", Generator.to_string(generator), # compiler
 	"-Wno-dev", # supress CMake developer warnings
-	"-D", "CMAKE_INSTALL_PREFIX=" + open_cv_install_dir, # set installation folder
+	"-D", "CMAKE_INSTALL_PREFIX=" + open_cv_install_dir, # set installation directory
 	
 	# ### OpenCV build setup ###
 	
@@ -181,7 +222,7 @@ cmakeCmd = [
 	
 	# ##########################
 	
-	"../../../../third_party/opencv"] # source code folder
+	"../../../../third_party/opencv"] # source code directory
 retCode = subprocess.check_call(cmakeCmd, stderr=subprocess.STDOUT, shell=False)
 
 # Build and install OpenCV project
@@ -193,10 +234,10 @@ cmakeCmd = [
 retCode = subprocess.check_call(cmakeCmd, stderr=subprocess.STDOUT, shell=False)
 
 # Build own project
-os.chdir(project_build_dir) # change into build folder of project
+os.chdir(project_build_dir) # change into build directory of project
 cmakeCmd = [
 	"cmake.exe", # cmake
-	"-G", "Visual Studio 14 Win64", # compiler
+	"-G", Generator.to_string(generator), # compiler
 	"-D", "CONFIG=" + Configuration.to_string(config),
-	"../../MyProject"] # source code folder
+	"../../MyProject"] # source code directory
 retCode = subprocess.check_call(cmakeCmd, stderr=subprocess.STDOUT, shell=False)
