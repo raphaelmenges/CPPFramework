@@ -5,8 +5,6 @@ get_filename_component(TARGET_NAME ${CMAKE_CURRENT_SOURCE_DIR} NAME)
 string(REPLACE " " "_" TARGET_NAME ${TARGET_NAME})
 
 # Code
-file(GLOB_RECURSE SOURCES *.cpp)
-file(GLOB_RECURSE HEADER *.h)
 file(GLOB_RECURSE LOCAL_CODE *.h *.cpp)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
@@ -19,7 +17,7 @@ add_executable(${TARGET_NAME} ${CODE})
 # Set label of project
 set_property(TARGET ${TARGET_NAME} PROPERTY PROJECT_LABEL exe_${TARGET_NAME})
 
-# Link to executable
+# Linking
 target_link_libraries(${TARGET_NAME} ${INTERNAL_LIBRARIES} ${EXTERNAL_LIBRARIES})
 
 # Filtering for Visual Studio

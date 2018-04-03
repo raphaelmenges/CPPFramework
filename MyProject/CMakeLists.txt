@@ -1,18 +1,18 @@
 cmake_minimum_required(VERSION 2.8)
 
 # TODO
-# - for deploying, res_path must be relative to executables
+# - For deploying, res_path must be relative to executables
 
 # Configuration
 set(CONFIG "Debug" CACHE STRING "Build configuration (Debug / Release).")
-set_property(CACHE CONFIG PROPERTY STRINGS Debug Release)
+set_property(CACHE CONFIG PROPERTY STRINGS Debug Release) # valus config can be assigned
 string(COMPARE EQUAL "${CONFIG}" "Debug" cmp)
 if(cmp)
 	set(CMAKE_CONFIGURATION_TYPES "Debug" CACHE INTERNAL "" FORCE)
 else()
-	set(CMAKE_CONFIGURATION_TYPES "Release" CACHE INTERNAL "" FORCE)
+	set(CMAKE_CONFIGURATION_TYPES "Release" CACHE INTERNAL "" FORCE) # fallback
 endif()
-message(STATUS "Build Configuration='${CMAKE_CONFIGURATION_TYPES}'")
+message(STATUS "Build Configuration = '${CMAKE_CONFIGURATION_TYPES}'")
 string(TOLOWER "${CMAKE_CONFIGURATION_TYPES}" CONFIG_LOWER_CASE)
 
 # Set project name
@@ -42,7 +42,7 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib CACHE PATH "Output path for li
 # Macros
 include(${CMAKE_MODULE_PATH}/macros.cmake)
 
-# Include path to own libraries folder
+# Include path to internal libraries folder
 include_directories(${LIB_PATH})
 
 # Global code (empty, as of now)
@@ -51,7 +51,7 @@ include_directories(${LIB_PATH})
 # External libraries
 set(EXTERNAL_LIBRARIES "")
 
-# OpenCV
+# OpenCV TODO: adapt for Linux / make
 include_directories("${FRAMEWORK_DIR}/_generated/${CONFIG_LOWER_CASE}/opencv/install/include") # include dir
 file(GLOB OPENCV_LIBS "${FRAMEWORK_DIR}/_generated/${CONFIG_LOWER_CASE}/opencv/install/x64/vc14/lib/*.lib") # linked libraries
 set(EXTERNAL_LIBRARIES ${EXTERNAL_LIBRARIES} ${OPENCV_LIBS})
@@ -73,20 +73,18 @@ foreach(LIB ${OPENCV_SHARED_LIBS})
 endforeach()
 
 # Libraries
-set(INTERNAL_LIBRARIES "") # collect them to link later into executable
-message(STATUS "# Search for libraries")
+set(INTERNAL_LIBRARIES "") # collect libraries to link later into executable
+message(STATUS "- Libraries")
 SUBDIRLIST(SUBDIRS ${LIB_PATH})
 foreach(SUBDIR ${SUBDIRS})
     message(STATUS ${SUBDIR})
     add_subdirectory(${LIB_PATH}/${SUBDIR})
 endforeach()
-message(STATUS "# Done")
 
 # Executables
-message(STATUS "# Search for executables")
+message(STATUS "- Executables")
 SUBDIRLIST(SUBDIRS ${EXE_PATH})
 foreach(SUBDIR ${SUBDIRS})
     message(STATUS ${SUBDIR})
     add_subdirectory(${EXE_PATH}/${SUBDIR})
 endforeach()
-message(STATUS "# Done")
