@@ -4,6 +4,9 @@ cmake_minimum_required(VERSION 2.8)
 get_filename_component(TARGET_NAME ${CMAKE_CURRENT_SOURCE_DIR} NAME)
 string(REPLACE " " "_" TARGET_NAME ${TARGET_NAME})
 
+# Prefix target name with 't_'
+set(TARGET_NAME t_${TARGET_NAME})
+
 # Remember test in parent scope list
 set(TESTS ${TESTS} ${TARGET_NAME} PARENT_SCOPE)
 
@@ -16,9 +19,6 @@ set(CODE ${LOCAL_CODE} ${GLOBAL_CODE})
 
 # Create executable
 add_executable(${TARGET_NAME} ${CODE})
-
-# Set label of project
-set_property(TARGET ${TARGET_NAME} PROPERTY PROJECT_LABEL test_${TARGET_NAME})
 
 # Linking
 target_link_libraries(${TARGET_NAME} ${INTERNAL_LIBRARIES} ${EXTERNAL_LIBRARIES} ${TEST_LIBRARIES})
