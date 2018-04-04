@@ -210,6 +210,7 @@ cmake_cmd = [
 	"-D", "WITH_WEBP=OFF",
 	"-D", "WITH_WIN32UI=ON", # TODO: deactivate this under linux or just let it be ignored? under linux, gtk3 would be required...
 	"-D", "WITH_GTK=ON", # TODO: visual debug option
+	"-D", "WITH_GTK_2_X=ON", # TODO: visual debug option
 	"-D", "WITH_XIMEA=OFF",
 	"-D", "mdi=OFF",
 	"-D", "next=OFF",
