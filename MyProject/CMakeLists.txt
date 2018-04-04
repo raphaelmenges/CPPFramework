@@ -64,8 +64,10 @@ include_directories(${OPEN_CV_PATH}/include) # include dir
 if(MSVC)
 	file(GLOB OPENCV_LIBS ${OPEN_CV_PATH}/x64/vc14/lib/*.lib) # linked libraries
 	file(GLOB OPENCV_SHARED_LIBS ${OPEN_CV_PATH}/x64/vc14/bin/*.dll) # run-time libraries
+	set(EXTERNAL_LIBRARIES ${EXTERNAL_LIBRARIES} ${OPENCV_LIBS}) # collect libraries to link into
 else() # probably GCC
 	file(GLOB OPENCV_SHARED_LIBS ${OPEN_CV_PATH}/lib/*.so) # run-time libraries
+	set(EXTERNAL_LIBRARIES ${EXTERNAL_LIBRARIES} ${OPENCV_SHARED_LIBS}) # for GCC, link to shared libraries at both compile and run time
 endif()
 
 # Copy shared libraries to output folder of executable binaries
@@ -82,7 +84,6 @@ foreach(LIB ${OPENCV_SHARED_LIBS})
 	# Copy shared library to same folder as executable binaries
 	configure_file(${LIB} ${EXECUTABLE_OUTPUT_PATH}/${LIB_FILENAME} COPYONLY)
 endforeach()
-set(EXTERNAL_LIBRARIES ${EXTERNAL_LIBRARIES} ${OPENCV_LIBS}) # collect libraries to link into
 
 # EIGEN
 set(EIGEN_PATH ${EXT_PATH}/eigen-git-mirror)
