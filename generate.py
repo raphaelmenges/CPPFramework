@@ -177,12 +177,16 @@ cmake_cmd = [
 	
 	# Support
 	"-D", "WITH_CUDA=OFF",
+	"-D", "WITH_CUFFT=OFF",
+	"-D", "WITH_CUBLAS=OFF",
+	"-D", "WITH_GPHOTO2=OFF",
 	"-D", "WITH_DIRECTX=OFF",
 	"-D", "WITH_DSHOW=ON",
 	"-D", "WITH_EIGEN=ON", # conversion functionality between OpenCV and EIGEN
 	"-D", "WITH_FFMPEG=ON",
 	"-D", "WITH_GSTREAMER=OFF",
 	"-D", "WITH_JPEG=ON",
+	"-D", "WITH_JASPER=OFF",
 	"-D", "WITH_MATLAB=OFF",
 	"-D", "WITH_LAPACK=OFF",
 	"-D", "WITH_OPENCL=OFF",
@@ -205,6 +209,7 @@ cmake_cmd = [
 	"-D", "WITH_VTK=OFF",
 	"-D", "WITH_WEBP=OFF",
 	"-D", "WITH_WIN32UI=ON", # TODO: deactivate this under linux or just let it be ignored? under linux, gtk3 would be required...
+	"-D", "WITH_GTK=ON", # TODO: visual debug option
 	"-D", "WITH_XIMEA=OFF",
 	"-D", "mdi=OFF",
 	"-D", "next=OFF",

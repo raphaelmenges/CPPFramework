@@ -56,14 +56,19 @@ include_directories(${LIB_PATH})
 # External libraries
 set(EXTERNAL_LIBRARIES "")
 
-# OpenCV TODO: adapt for Linux / make
+# OpenCV
 set(OPEN_CV_PATH ${FRAMEWORK_DIR}/_generated/${CONFIG_LOWER_CASE}/opencv/install)
 include_directories(${OPEN_CV_PATH}/include) # include dir
-file(GLOB OPENCV_LIBS ${OPEN_CV_PATH}/x64/vc14/lib/*.lib) # linked libraries
-set(EXTERNAL_LIBRARIES ${EXTERNAL_LIBRARIES} ${OPENCV_LIBS})
+
+# Find libraries
+if(MSVC)
+	file(GLOB OPENCV_LIBS ${OPEN_CV_PATH}/x64/vc14/lib/*.lib) # linked libraries
+	file(GLOB OPENCV_SHARED_LIBS ${OPEN_CV_PATH}/x64/vc14/bin/*.dll) # run-time libraries
+else() # probably GCC
+	file(GLOB OPENCV_SHARED_LIBS ${OPEN_CV_PATH}/lib/*.so) # run-time libraries
+endif()
 
 # Copy shared libraries to output folder of executable binaries
-file(GLOB OPENCV_SHARED_LIBS ${OPEN_CV_PATH}/x64/vc14/bin/*.dll)
 foreach(LIB ${OPENCV_SHARED_LIBS})
 
 	# Get filename of shared lib
@@ -77,6 +82,7 @@ foreach(LIB ${OPENCV_SHARED_LIBS})
 	# Copy shared library to same folder as executable binaries
 	configure_file(${LIB} ${EXECUTABLE_OUTPUT_PATH}/${LIB_FILENAME} COPYONLY)
 endforeach()
+set(EXTERNAL_LIBRARIES ${EXTERNAL_LIBRARIES} ${OPENCV_LIBS}) # collect libraries to link into
 
 # EIGEN
 set(EIGEN_PATH ${EXT_PATH}/eigen-git-mirror)
