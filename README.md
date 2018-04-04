@@ -16,7 +16,7 @@ Install the following packages through the packet manager:
 - *git*
 - *build-essential*
 - *cmake*
-- optional: *libgtk2.0-dev* or *libgtk3.0* (for visual debug)
+- optional: *libgtk2.0-dev* or *libgtk3.0-dev* (for visual debug)
 
 ## Procedure
 Open _cmd_/_terminal_ in the directory where the project should be placed and execute the following commands:
