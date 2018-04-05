@@ -8,7 +8,6 @@ Script to generate framework. Please execute this instead of manual CMake calls.
 
 Remarks:
 - 64bit, only
-- TODO: switch to enable visual_debug (aka whether to build highlevel GUI module or not)
 """
 
 # #########################
@@ -162,7 +161,7 @@ cmake_cmd = [
 	"-D", "BUILD_TESTS=OFF", # no tests
 	"-D", "BUILD_PERF_TESTS=OFF",
 	"-D", "BUILD_PACKAGE=OFF",
-	"-D", "BUILD_SHARED_LIBS=ON", # build shared libs
+	"-D", "BUILD_SHARED_LIBS=OFF", # build static libs
 	"-D", "BUILD_WITH_STATIC_CRT=OFF", # only for MSVC
 	"-D", "BUILD_USE_SYMLINKS=OFF",
 	"-D", "BUILD_WITH_DEBUG_INFO=OFF",

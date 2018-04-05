@@ -66,30 +66,13 @@ set(EXTERNAL_LIBRARIES "")
 set(OPEN_CV_PATH ${FRAMEWORK_DIR}/_generated/${CONFIG_LOWER_CASE}/opencv/install)
 include_directories(${OPEN_CV_PATH}/include) # include dir
 
-# Find libraries
+# Find static OpenCV libraries
 if(MSVC)
-	file(GLOB OPENCV_LIBS ${OPEN_CV_PATH}/x64/vc14/lib/*.lib) # linked libraries
-	file(GLOB OPENCV_SHARED_LIBS ${OPEN_CV_PATH}/x64/vc14/bin/*.dll) # run-time libraries
-	set(EXTERNAL_LIBRARIES ${EXTERNAL_LIBRARIES} ${OPENCV_LIBS}) # collect libraries to link into
+	file(GLOB OPENCV_LIBS ${OPEN_CV_PATH}/x64/vc*/staticlib/*.lib) # assumes that only one Visual Studio version was used to build libraries
 else() # probably GCC
-	file(GLOB OPENCV_SHARED_LIBS ${OPEN_CV_PATH}/lib/*.so) # run-time libraries
-	set(EXTERNAL_LIBRARIES ${EXTERNAL_LIBRARIES} ${OPENCV_SHARED_LIBS}) # for GCC, link to shared libraries at both compile and run time
+	file(GLOB OPENCV_LIBS ${OPEN_CV_PATH}/lib/*.a)
 endif()
-
-# Copy shared libraries to output folder of executable binaries
-foreach(LIB ${OPENCV_SHARED_LIBS})
-
-	# Get filename of shared lib
-	get_filename_component(LIB_FILENAME ${LIB} NAME)
-	
-	# Workaround for MSVC, where binaries are stored in subfolder named after configuration
-	if(MSVC)
-		set(LIB_FILENAME ${CONFIG_LOWER_CASE}/${LIB_FILENAME})
-	endif(MSVC)
-	
-	# Copy shared library to same folder as executable binaries
-	configure_file(${LIB} ${EXECUTABLE_OUTPUT_PATH}/${LIB_FILENAME} COPYONLY)
-endforeach()
+set(EXTERNAL_LIBRARIES ${EXTERNAL_LIBRARIES} ${OPENCV_LIBS}) # collect libraries to link into
 
 # EIGEN
 set(EIGEN_PATH ${EXT_PATH}/eigen-git-mirror)
