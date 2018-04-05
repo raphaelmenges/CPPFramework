@@ -93,6 +93,13 @@ else() # probably GCC
 	list(APPEND OPENCV_LIBS ${OPEN_CV_PATH}/share/OpenCV/3rdparty/lib/liblibpng.a)
 	list(APPEND OPENCV_LIBS ${OPEN_CV_PATH}/share/OpenCV/3rdparty/lib/libzlib.a)
 	list(APPEND OPENCV_LIBS ${OPEN_CV_PATH}/lib/libopencv_core.a)
+	
+	# GTK2
+	if(NOT ${HEADLESS})
+		find_package(PkgConfig REQUIRED)
+		pkg_check_modules(GTK REQUIRED gtk+-2.0)
+		list(APPEND FINAL_LIBRARIES ${GTK_LIBRARIES})
+	endif()
 
 	# Some libraries required by OpenCV
 	list(APPEND FINAL_LIBRARIES pthread)
