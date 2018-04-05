@@ -29,6 +29,9 @@ if(NOT MSVC)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall")
 endif(NOT MSVC)
 
+# Headless (whether GUI through OpenCV is available or not)
+set(HEADLESS "Headless" CACHE BOOL "Whether GUI through OpenCV is used (OFF) or not (ON).")
+
 # Paths
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 set(EXT_PATH ${CMAKE_SOURCE_DIR}/ext)
@@ -38,6 +41,9 @@ set(LIB_PATH ${CMAKE_SOURCE_DIR}/src/lib)
 set(TEST_PATH ${CMAKE_SOURCE_DIR}/src/test)
 
 # Defines for C++ side
+if(${HEADLESS})
+	add_definitions(-DHEADLESS)
+endif()
 add_definitions(-DRES_PATH="${RES_PATH}")
 
 # Outputs

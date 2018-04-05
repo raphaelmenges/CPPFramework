@@ -46,8 +46,6 @@ class Configuration:
 		else:
 			return "Release"
 			
-# TODO: Visual Debug flag here, deciding whether to support WIN32UI or GTK
-			
 # ########################################
 # ######## Command Line Arguments ########
 # ########################################
@@ -56,6 +54,7 @@ class Configuration:
 parser = argparse.ArgumentParser()
 parser.add_argument("-c", "--configuration", help="build configuration, either 'release' or 'debug'")
 parser.add_argument("-g", "--generator", help="generator, either 'MSVC2015' or 'MSVC2017' on Windows or 'Make' on Linux")
+parser.add_argument("-l", "--headless", help="headless mode", action='store_true')
 args = parser.parse_args()
 
 # #########################################
@@ -210,8 +209,8 @@ cmake_cmd = [
 	"-D", "WITH_VFW=OFF",
 	"-D", "WITH_VTK=OFF",
 	"-D", "WITH_WEBP=OFF",
-	"-D", "WITH_WIN32UI=ON", # TODO: deactivate this under linux or just let it be ignored? under linux, gtk3 would be required...
-	"-D", "WITH_GTK=ON", # TODO: visual debug option
+	"-D", "WITH_WIN32UI=" + ("OFF" if args.headless else "ON"),
+	"-D", "WITH_GTK=" + ("OFF" if args.headless else "ON"),
 	"-D", "WITH_XIMEA=OFF",
 	"-D", "mdi=OFF",
 	"-D", "next=OFF",
@@ -288,5 +287,6 @@ cmake_cmd = [
 	cmake_exe, # cmake
 	"-G", Generator.to_string(generator), # compiler
 	"-D", "CONFIG=" + Configuration.to_string(config),
+	"-D", "HEADLESS=" + ("ON" if args.headless else "OFF"),
 	"../../MyProject"] # source code directory
 retCode = subprocess.check_call(cmake_cmd, stderr=subprocess.STDOUT, shell=False)

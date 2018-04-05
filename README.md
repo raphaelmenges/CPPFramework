@@ -16,7 +16,7 @@ Install the following packages through the packet manager:
 - *git*
 - *build-essential*
 - *cmake*
-- optional: *libgtk2.0-dev* or *libgtk3.0-dev* (for visual debug)
+- optional: *libgtk2.0-dev* or *libgtk3.0-dev* (for non-headless mode)
 
 ## Procedure
 Open _cmd_/_terminal_ in the directory where the project should be placed and execute the following commands:
@@ -28,7 +28,7 @@ python .
 This assumes Python 3 to be the standard Python environment on your system. There are arguments available for the Python call:
 * `-c` (`--configuration`): build configuration, either 'release' or 'debug'
 * `-g` (`--generator`): generator, either 'MSVC2015' or 'MSVC2017' on Windows or 'Make' on Linux
+* `-l` (`--headless`): headless mode
 
 ## TODO
-- Decide on highgui module / win32ui / gtk: visual_debug flag?
 - Machine Learning Library?

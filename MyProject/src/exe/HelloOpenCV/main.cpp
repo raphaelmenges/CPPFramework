@@ -13,8 +13,13 @@ int main(int argc, const char* argv[])
 	cv::GaussianBlur(gray, gray, cv::Size(7, 7), 1.5);
 	cv::Canny(gray, gray, 0, 50);
 
-	cv::imshow("img", img);
-	cv::imshow("edges", gray);
-	cv::waitKey();
+#ifndef HEADLESS
+	{
+		cv::imshow("img", img);
+		cv::imshow("edges", gray);
+		cv::waitKey();
+	}
+#endif
+	
 	return 0;
 }
