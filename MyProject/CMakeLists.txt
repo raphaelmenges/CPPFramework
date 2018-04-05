@@ -62,6 +62,9 @@ include_directories(${LIB_PATH})
 # External libraries
 set(EXTERNAL_LIBRARIES "")
 
+# Final libraries, linked in the end
+set(FINAL_LIBRARIES "")
+
 # OpenCV
 set(OPEN_CV_PATH ${FRAMEWORK_DIR}/_generated/${CONFIG_LOWER_CASE}/opencv/install)
 include_directories(${OPEN_CV_PATH}/include) # include dir
@@ -70,7 +73,31 @@ include_directories(${OPEN_CV_PATH}/include) # include dir
 if(MSVC)
 	file(GLOB OPENCV_LIBS ${OPEN_CV_PATH}/x64/vc*/staticlib/*.lib) # assumes that only one Visual Studio version was used to build libraries
 else() # probably GCC
-	file(GLOB OPENCV_LIBS ${OPEN_CV_PATH}/lib/*.a)
+
+	# GCC requires certain order at linking. Remember to add further OpenCV modules here
+	set(OPENCV_LIBS "")
+	list(APPEND OPENCV_LIBS ${OPEN_CV_PATH}/lib/libopencv_core.a)
+	list(APPEND OPENCV_LIBS ${OPEN_CV_PATH}/lib/libopencv_imgcodecs.a)
+	list(APPEND OPENCV_LIBS ${OPEN_CV_PATH}/lib/libopencv_imgproc.a)
+	list(APPEND OPENCV_LIBS ${OPEN_CV_PATH}/lib/libopencv_videoio.a)
+	list(APPEND OPENCV_LIBS ${OPEN_CV_PATH}/lib/libopencv_highgui.a)
+	list(APPEND OPENCV_LIBS ${OPEN_CV_PATH}/lib/libopencv_video.a)
+	list(APPEND OPENCV_LIBS ${OPEN_CV_PATH}/lib/libopencv_photo.a)
+	list(APPEND OPENCV_LIBS ${OPEN_CV_PATH}/lib/libopencv_ml.a)
+	list(APPEND OPENCV_LIBS ${OPEN_CV_PATH}/lib/libopencv_features2d.a)
+	list(APPEND OPENCV_LIBS ${OPEN_CV_PATH}/lib/libopencv_features2d.a)
+	list(APPEND OPENCV_LIBS ${OPEN_CV_PATH}/share/OpenCV/3rdparty/lib/libippicv.a)
+	list(APPEND OPENCV_LIBS ${OPEN_CV_PATH}/share/OpenCV/3rdparty/lib/libippiw.a)
+	list(APPEND OPENCV_LIBS ${OPEN_CV_PATH}/share/OpenCV/3rdparty/lib/libittnotify.a)
+	list(APPEND OPENCV_LIBS ${OPEN_CV_PATH}/share/OpenCV/3rdparty/lib/liblibjpeg.a)
+	list(APPEND OPENCV_LIBS ${OPEN_CV_PATH}/share/OpenCV/3rdparty/lib/liblibpng.a)
+	list(APPEND OPENCV_LIBS ${OPEN_CV_PATH}/share/OpenCV/3rdparty/lib/libzlib.a)
+	list(APPEND OPENCV_LIBS ${OPEN_CV_PATH}/lib/libopencv_core.a)
+
+	# Some libraries required by OpenCV
+	list(APPEND FINAL_LIBRARIES pthread)
+	list(APPEND FINAL_LIBRARIES dl)
+	
 endif()
 set(EXTERNAL_LIBRARIES ${EXTERNAL_LIBRARIES} ${OPENCV_LIBS}) # collect libraries to link into
 

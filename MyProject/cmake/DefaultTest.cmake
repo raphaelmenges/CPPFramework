@@ -21,7 +21,7 @@ set(CODE ${LOCAL_CODE} ${GLOBAL_CODE})
 add_executable(${TARGET_NAME} ${CODE})
 
 # Linking
-target_link_libraries(${TARGET_NAME} ${INTERNAL_LIBRARIES} ${EXTERNAL_LIBRARIES} ${TEST_LIBRARIES})
+target_link_libraries(${TARGET_NAME} ${INTERNAL_LIBRARIES} ${EXTERNAL_LIBRARIES} ${TEST_LIBRARIES} ${FINAL_LIBRARIES})
 
 # Filtering for Visual Studio
 if(MSVC)

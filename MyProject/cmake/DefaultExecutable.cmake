@@ -18,7 +18,7 @@ add_executable(${TARGET_NAME} ${CODE})
 set_property(TARGET ${TARGET_NAME} PROPERTY PROJECT_LABEL exe_${TARGET_NAME})
 
 # Linking
-target_link_libraries(${TARGET_NAME} ${INTERNAL_LIBRARIES} ${EXTERNAL_LIBRARIES})
+target_link_libraries(${TARGET_NAME} ${INTERNAL_LIBRARIES} ${EXTERNAL_LIBRARIES} ${FINAL_LIBRARIES})
 
 # Filtering for Visual Studio
 if(MSVC)
