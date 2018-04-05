@@ -46,6 +46,8 @@ class Configuration:
 		else:
 			return "Release"
 			
+# TODO: Visual Debug flag here, deciding whether to support WIN32UI or GTK
+			
 # ########################################
 # ######## Command Line Arguments ########
 # ########################################
@@ -240,7 +242,7 @@ cmake_cmd = [
 	"-D", "BUILD_opencv_dnn=OFF",
 	"-D", "BUILD_opencv_features2d=ON",
 	"-D", "BUILD_opencv_flann=OFF",
-	"-D", "BUILD_opencv_highgui=ON", # required for imshow (so rather 'debugging')
+	"-D", "BUILD_opencv_highgui=ON", # includes media io
 	"-D", "BUILD_opencv_imgcodecs=ON",
 	"-D", "BUILD_opencv_imgproc=ON",
 	"-D", "BUILD_opencv_ml=ON",
