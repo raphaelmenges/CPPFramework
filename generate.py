@@ -52,7 +52,7 @@ class Configuration:
 # Parse command line arguments
 parser = argparse.ArgumentParser()
 parser.add_argument("-c", "--configuration", help="build configuration, either 'release' or 'debug'")
-parser.add_argument("-g", "--generator", help="generator, either 'MSVC2015' or 'MSVC2017' on Windows or 'Make' on Linux")
+parser.add_argument("-g", "--generator", help="generator, either 'MSVC2015' or 'MSVC2017' on Windows or 'make' on Linux")
 parser.add_argument("-l", "--headless", help="headless mode", action='store_true')
 args = parser.parse_args()
 
