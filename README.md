@@ -32,3 +32,4 @@ This assumes Python 3 to be the standard Python environment on your system. Ther
 
 ## TODO
 - Machine Learning Library?
+- Logging library? (Proposal: SPDLog)
