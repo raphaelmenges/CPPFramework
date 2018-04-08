@@ -1,5 +1,9 @@
 cmake_minimum_required(VERSION 2.8)
 
+# Override install macro to prohibit any installation
+macro(install)
+endmacro()
+
 # TODO
 # - For deploying, res_path must be relative to executables
 
