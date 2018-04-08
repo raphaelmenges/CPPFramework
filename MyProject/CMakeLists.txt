@@ -29,8 +29,8 @@ if(NOT MSVC)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall")
 endif(NOT MSVC)
 
-# Headless (whether GUI through OpenCV is available or not)
-set(HEADLESS "Headless" CACHE BOOL "Whether GUI through OpenCV is used (OFF) or not (ON).")
+# Visual debugging (whether GUI through OpenCV is available or not)
+set(VISUAL_DEBUG "Visual Debug" CACHE BOOL "Whether GUI through OpenCV is used (ON) or not (OFF).")
 
 # Paths
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
@@ -41,8 +41,8 @@ set(LIB_PATH ${CMAKE_SOURCE_DIR}/src/lib)
 set(TEST_PATH ${CMAKE_SOURCE_DIR}/src/test)
 
 # Defines for C++ side
-if(${HEADLESS})
-	add_definitions(-DHEADLESS)
+if(${VISUAL_DEBUG})
+	add_definitions(-DVISUAL_DEBUG)
 endif()
 add_definitions(-DRES_PATH="${RES_PATH}")
 
@@ -95,7 +95,7 @@ else() # probably GCC
 	list(APPEND OPENCV_LIBS ${OPEN_CV_PATH}/lib/libopencv_core.a)
 	
 	# GTK2
-	if(NOT ${HEADLESS})
+	if(${VISUAL_DEBUG})
 		find_package(PkgConfig REQUIRED)
 		pkg_check_modules(GTK REQUIRED gtk+-2.0)
 		list(APPEND FINAL_LIBRARIES ${GTK_LIBRARIES})

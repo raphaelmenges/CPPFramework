@@ -28,7 +28,7 @@ python .
 This assumes Python 3 to be the standard Python environment on your system. There are arguments available for the Python call:
 * `-c` (`--configuration`): build configuration, either 'release' or 'debug'
 * `-g` (`--generator`): generator, either 'MSVC2015' or 'MSVC2017' on Windows or 'Make' on Linux
-* `-l` (`--headless`): headless mode
+* `-v` (`--visualdebug`): visual debugging mode. aka non-headless
 
 ## TODO
 - Machine Learning Library?

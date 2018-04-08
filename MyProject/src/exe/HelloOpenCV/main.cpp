@@ -14,7 +14,7 @@ int main(int argc, const char* argv[])
 	cv::GaussianBlur(gray, gray, cv::Size(7, 7), 1.5);
 	cv::Canny(gray, gray, 0, 50);
 
-#ifndef HEADLESS
+#ifdef VISUAL_DEBUG
 	{
 		cv::imshow("img", img);
 		cv::imshow("edges", gray);
